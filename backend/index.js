@@ -4,6 +4,7 @@ const cors = require('cors')
 const authRoutes = require('./routes/authRoutes.js')
 const urlRoutes = require('./routes/urlRoutes.js')
 const cookieParser = require('cookie-parser')
+const { errorHandler } = require('./middleware/errorHandler.js')
 
 const app = express()
 
@@ -25,16 +26,9 @@ connectDB(process.env.URI).then(() => {
 })
 
 
-// Url Routes
+// Register Routers
+app.use('/', urlRoutes)
+app.use('/', authRoutes)
 
-app.get('/api/user', urlcontrollers.get_url)
-app.post('/api/user', urlcontrollers.post_url)
-app.delete('/:shortid', urlcontrollers.delete_url)
-app.get('/:shortid', urlcontrollers.get_click_short_url)
-app.post('/api/user/premium', urlcontrollers.post_premium_url)
-app.get('/analytics/:shortid', urlcontrollers.get_clicks_data)
-
-// Auth routes
-app.post('/signup', authcontrollers.signup_post)
-app.post('/login', authcontrollers.login_post)
-app.post('/workspace', userValidation)
+// Error Handler (must be after all routes)
+app.use(errorHandler)
