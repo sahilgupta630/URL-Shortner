@@ -1,17 +1,16 @@
 const express = require('express')
-const {connectDB} = require('./connectionDB/connection.js')
+const { connectDB } = require('./connectionDB/connection.js')
 const cors = require('cors')
-const authcontrollers = require('./controllers/authControllers.js')
+const authRoutes = require('./routes/authRoutes.js')
+const urlRoutes = require('./routes/urlRoutes.js')
 const cookieParser = require('cookie-parser')
-const {userValidation} = require('./middleware/authmiddleware.js')
-const urlcontrollers = require('./controllers/urlControllers.js')
 
 const app = express()
 
 
 
 require('dotenv').config()
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
@@ -20,15 +19,15 @@ app.use(cors({
 }))
 // Connect to MongoDB
 
-connectDB(process.env.URI).then(()=>{
+connectDB(process.env.URI).then(() => {
     console.log("connected to DB...")
-    app.listen(process.env.PORT, ()=>console.log(`Server started on PORT: ${process.env.PORT}`))
+    app.listen(process.env.PORT, () => console.log(`Server started on PORT: ${process.env.PORT}`))
 })
 
 
 // Url Routes
 
-app.get('/api/user',urlcontrollers.get_url)
+app.get('/api/user', urlcontrollers.get_url)
 app.post('/api/user', urlcontrollers.post_url)
 app.delete('/:shortid', urlcontrollers.delete_url)
 app.get('/:shortid', urlcontrollers.get_click_short_url)
